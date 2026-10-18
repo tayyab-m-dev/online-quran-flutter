@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'theme/app_theme.dart';
-import 'navigation/main_navigation.dart';
+import 'screens/auth/login_screen.dart';
 
 class QuranApp extends StatelessWidget {
   const QuranApp({super.key});
@@ -12,7 +12,7 @@ class QuranApp extends StatelessWidget {
       title: 'Online Quran System',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      home: const MainNavigation(),
+      home: const LoginScreen(),
     );
   }
 }
