@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
+
 import '../../navigation/main_navigation.dart';
+import '../teacher/teacher_dashboard_screen.dart';
 import 'signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -74,13 +76,30 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (role == 'Student') {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
+        MaterialPageRoute<void>(
           builder: (_) => const MainNavigation(),
+        ),
+      );
+    } else if (role == 'Teacher') {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute<void>(
+          builder: (dashboardContext) {
+            return TeacherDashboardScreen(
+              onLogout: () {
+                Navigator.of(dashboardContext).pushAndRemoveUntil(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const LoginScreen(),
+                  ),
+                      (route) => false,
+                );
+              },
+            );
+          },
         ),
       );
     } else {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
+        MaterialPageRoute<void>(
           builder: (_) => DemoRoleDashboard(role: role),
         ),
       );
@@ -161,7 +180,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 28),
-
                   const Text(
                     'Welcome Back',
                     style: TextStyle(
@@ -176,7 +194,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: TextStyle(color: muted, fontSize: 14),
                   ),
                   const SizedBox(height: 24),
-
                   Form(
                     key: _formKey,
                     child: Column(
@@ -229,7 +246,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                         ),
                         const SizedBox(height: 18),
-
                         const Text(
                           'Password',
                           style: TextStyle(
@@ -292,7 +308,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             return null;
                           },
                         ),
-
                         if (_errorMessage != null) ...[
                           const SizedBox(height: 14),
                           Text(
@@ -303,7 +318,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ],
-
                         const SizedBox(height: 24),
                         SizedBox(
                           height: 52,
@@ -328,7 +342,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                   ),
-
                   const SizedBox(height: 18),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -340,7 +353,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).push(
-                            MaterialPageRoute(
+                            MaterialPageRoute<void>(
                               builder: (_) => const SignupScreen(),
                             ),
                           );
@@ -355,7 +368,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 18),
                   const Row(
                     children: [
@@ -376,9 +388,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   const SizedBox(height: 14),
-
                   ..._demoAccounts.map((account) {
                     final role = account['role']!;
+
                     final IconData icon = role == 'Student'
                         ? Icons.school_outlined
                         : role == 'Teacher'
@@ -423,7 +435,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     );
                   }),
-
                   const SizedBox(height: 12),
                   const Text(
                     'Frontend demonstration only. These credentials are '
@@ -444,8 +455,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-/// Temporary landing screen for Teacher and Admin.
-/// We will connect the Teacher Panel created by your friend later.
+// Temporary landing screen for the Admin demo account.
 class DemoRoleDashboard extends StatelessWidget {
   const DemoRoleDashboard({
     super.key,
@@ -457,7 +467,6 @@ class DemoRoleDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const green = Color(0xFF174D3A);
-    final isTeacher = role == 'Teacher';
 
     return Scaffold(
       backgroundColor: const Color(0xFFFAF8F0),
@@ -471,7 +480,7 @@ class DemoRoleDashboard extends StatelessWidget {
             tooltip: 'Sign out',
             onPressed: () {
               Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
+                MaterialPageRoute<void>(
                   builder: (_) => const LoginScreen(),
                 ),
                     (route) => false,
@@ -488,9 +497,7 @@ class DemoRoleDashboard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
-                isTeacher
-                    ? Icons.cast_for_education_rounded
-                    : Icons.admin_panel_settings_rounded,
+                Icons.admin_panel_settings_rounded,
                 size: 76,
                 color: green,
               ),
@@ -506,9 +513,9 @@ class DemoRoleDashboard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                isTeacher
-                    ? 'Your teacher dashboard will be integrated here.'
-                    : 'Your admin dashboard will be built next.',
+                role == 'Admin'
+                    ? 'Your admin dashboard will be built next.'
+                    : 'Dashboard coming soon.',
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 15),
               ),
@@ -516,7 +523,7 @@ class DemoRoleDashboard extends StatelessWidget {
               OutlinedButton.icon(
                 onPressed: () {
                   Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
+                    MaterialPageRoute<void>(
                       builder: (_) => const LoginScreen(),
                     ),
                         (route) => false,
